@@ -32,8 +32,8 @@
         let password = $("#userpw").val()
 
         if (username == "") {
-            {#$("#help-id-login").text("아이디를 입력해주세요.")#}
-            alert('아이디를 입력해주세요');
+            $("#help-id-login").text("아이디를 입력해주세요.")
+            {#alert('아이디를 입력해주세요');#}
             $("#input-username").focus()
             return;
         } else {
@@ -41,8 +41,8 @@
         }
 
         if (password == "") {
-            {#$("#help-password-login").text("비밀번호를 입력해주세요.")#}
-            alert('비밀번호를 입력해주세요');
+            $("#help-password-login").text("비밀번호를 입력해주세요.")
+            {#alert('비밀번호를 입력해주세요');#}
             $("#input-password").focus()
             return;
         } else {
@@ -87,34 +87,30 @@
     </section>
 
     <div class="login">
-        <form>
-            <fieldset>
-                <legend>회원가입</legend>
-                <div class="inner">
-                    <div class="id-section">
-                        <label for="id"></label>
-                        <span>아이디</span>
-                        <input id="userid" type="text" class="id" placeholder="아이디"/>
-                        <i class="far fa-user"></i>
-                    </div>
-                    <div class="pw-section">
-                        <label for="pw"></label>
-                        <span>비밀번호</span>
-                        <i class="fas fa-lock"></i>
-                        <input id="userpw" type="password" class="pw" placeholder="비밀번호"/>
-                    </div>
-                    <p class="checkid"></p>
-                    <p class="checkpw"></p>
-                    <div class="btn-section">
-                        <button type="submit" onclick="sign_in()">로그인</button>
-                    </div>
-                </div>
-            </fieldset>
-        </form>
+        <div class="inner">
+            <div class="id-section">
+                <label for="id"></label>
+                <span>아이디</span>
+                <input id="userid" type="text" class="id" placeholder="아이디"/>
+                <i class="far fa-user"></i>
+            </div>
+            <div class="pw-section">
+                <label for="pw"></label>
+                <span>비밀번호</span>
+                <i class="fas fa-lock"></i>
+                <input id="userpw" type="password" class="pw" placeholder="비밀번호"/>
+            </div>
+            <div class="info">
+                <p id="help-id-login"></p>
+                <p id="help-password-login" ></p>
+            </div>
+            <div class="btn-section">
+                <button onclick="sign_in()">로그인</button>
+            </div>
+        </div>
     </div>
 
-    <p id="help-id-login" class="help is-danger"></p>
-    <p id="help-password-login" class="help is-danger"></p>
+
 
     <div class="join">
         <span>아직 회원이 아니신가요?</span>
