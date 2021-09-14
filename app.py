@@ -32,11 +32,7 @@ def home():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
-# 로그인 페이지
-@app.route('/login')
-def login():
-    msg = request.args.get("msg")
-    return render_template('login.html', msg=msg)
+
 
 # [로그인 API]
 @app.route('/sign_in', methods=['POST'])
@@ -63,11 +59,6 @@ def sign_in():
 
 
 
-# @app.route('/')
-# def main():
-#     return render_template("main.html")
-# -------------------------------
-#
 ## API 역할을 하는 부분
 @app.route('/main', methods=['POST'])
 def write_review():
@@ -86,21 +77,24 @@ def write_review():
     return jsonify({'msg': '저장 완료!'})
 
 
+# 로그인 페이지
+@app.route('/login')
+def login():
+    msg = request.args.get("msg")
+    return render_template('login.html', msg=msg)
 
 #메인페이지
-@app.route('/main')
+@app.route('/index')
 def main():
-    return render_template("main.html")
+    return render_template("index.html")
 
 # 오늘의프로필 페이지
 @app.route('/profile')
 def profile():
     return render_template("profile.html")
 
-# # 로그인페이지
-# @app.route('/login')
-# def login():
-#     return render_template("login.html")
+
+
 
 
 #오늘의프로필등록
