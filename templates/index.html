@@ -28,6 +28,10 @@
     <!--벌마 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 
+
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+
     <title>오늘의 칼로리 | main</title>
 
     <!-- style -->
@@ -76,6 +80,7 @@
 
         .comment {
             color: blue;
+            color: #396270;
             font-weight: bold;
         }
 
@@ -92,6 +97,7 @@
         }
     </style>
     <script>
+
 
         function update_profile() {
             let food_name = $('#input_food_name').val()
@@ -125,6 +131,10 @@ data: {foodName_give: food_name, foodDate_give: food_date, foodKcal_give: food_k
 
 
         $(document).ready(function () {
+
+
+        $(document).ready(function () {
+
             showkcal();
         });
 
@@ -141,6 +151,19 @@ data: {foodName_give: food_name, foodDate_give: food_date, foodKcal_give: food_k
         function postFood() {
 
 
+        function postFood() {
+          let food_name = $('#input_food_name').val()
+            let food_date = $('#input_food_date').val()
+            let food_kcal = $('#input_food_kcal').val()
+
+            let file = $('#file')[0].files[0]
+            let form_data = new FormData()
+
+            form_data.append("file_give", file)
+            form_data.append("foodName_give", food_name)
+            form_data.append("foodDate_give", food_date)
+            form_data.append("foodKcal_give", food_kcal)
+
             $.ajax({
                 type: "POST",
                 url: "/main",
@@ -153,6 +176,20 @@ data: {foodName_give: food_name, foodDate_give: food_date, foodKcal_give: food_k
         }
 
         function showkcal() {
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
+
+        function showkcal() {
+            $('#cards-box').empty()
            $.ajax({
                type: "GET",
                url: "/main",
@@ -174,6 +211,22 @@ data: {foodName_give: food_name, foodDate_give: food_date, foodKcal_give: food_k
                                                    <a target="_blank" href="${url}" class="card-title">${title}</a>
                                                    <p class="card-text">${desc}</p>
                                                    <p class="card-text comment">${comment}</p>
+                   let foods = response['all_foods']
+                   for (let i = 0; i < foods.length; i++) {
+                       let food_name = foods[i]['food_name']
+                       let food_date = foods[i]['food_date']
+                       let food_kcal = foods[i]['food_kcal']
+                       let file = foods[i]['file']
+
+
+                       let temp_html = `<div class="card">
+                                               <img class="card-img-top"
+                                                    src="../static/${file}"
+                                                    alt="Card image cap">
+                                               <div class="card-body">
+                                                   <a class="card-title">${food_name}</a>
+                                                   <p class="card-text">날짜: ${food_date}</p>
+                                                   <p class="card-text comment">${food_kcal} Kcal</p>
                                                </div>
                                            </div>`
                        $('#cards-box').append(temp_html)
@@ -203,6 +256,10 @@ data: {foodName_give: food_name, foodDate_give: food_date, foodKcal_give: food_k
     <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
 
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+
         </div>
     </div>
     </div>
@@ -211,6 +268,7 @@ data: {foodName_give: food_name, foodDate_give: food_date, foodKcal_give: food_k
         <div class="navbar-item">
             <div class="buttons">
                 <a class="button btn_mypage">
+                <a href="profile.html" class="button btn_mypage">
                     <strong>My Page</strong>
                 </a>
                 <a class="button is-light">
@@ -262,6 +320,7 @@ data: {foodName_give: food_name, foodDate_give: food_date, foodKcal_give: food_k
 
                 <label class="file-label">
                     <input class="file-input" type="file" name="resume">
+                    <input class="file-input" id="file" type="file" name="resume">
                     <span class="file-cta">
       <span class="file-icon">
         <i class="fas fa-upload"></i>

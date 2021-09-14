@@ -8,6 +8,8 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 
 
+import requests
+from datetime import datetime
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
@@ -21,6 +23,7 @@ db = client.todayKcal
 
 
 @app.route('/')
+
 def home():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -57,6 +60,9 @@ def sign_in():
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
+def main():
+    return render_template("index.html")
+
 
 
 ## API 역할을 하는 부분
@@ -66,16 +72,31 @@ def write_review():
     foodDate_receive = request.form['foodDate_give']
     foodKcal_receive = request.form['foodKcal_give']
 
+    file = request.files["file_give"]
+
+    extension = file.filename.split('.')[-1]
+    today = datetime.now()
+    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+
+    filename = f'file-{mytime}'
+    save_to = f'static/{filename}.{extension}'
+    file.save(save_to)
+
     doc = {
         'food_name':foodName_receive,
         'food_date':foodDate_receive,
-        'food_kcal':foodKcal_receive
+        'food_kcal':foodKcal_receive,
+        'file': f'{filename}.{extension}',
     }
 
     db.foodInfo.insert_one(doc)
 
     return jsonify({'msg': '저장 완료!'})
 
+@app.route('/main', methods=['GET'])
+def show_diary():
+    foodInfos = list(db.foodInfo.find({}, {'_id': False}))
+    return jsonify({'all_foods': foodInfos})
 
 # 로그인 페이지
 @app.route('/login')
@@ -83,10 +104,12 @@ def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)
 
+
 #메인페이지
 @app.route('/index')
 def main():
     return render_template("index.html")
+
 
 # 오늘의프로필 페이지
 @app.route('/profile')
