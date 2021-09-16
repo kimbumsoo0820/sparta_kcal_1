@@ -32,6 +32,12 @@ def home():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
+# 로그아웃 뒤로가기 방지
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return response
+
 
 @app.route('/')
 def main():
@@ -67,6 +73,30 @@ def sign_in():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
+# 회원가입페이지
+@app.route('/member/join')
+def member_join():
+    return render_template("join.html")
+
+@app.route('/member/check', methods=['POST'])
+def check_dup():
+    username_receive = request.form['username_give']
+    exists = bool(db.users.find_one({"username": username_receive}))
+    return jsonify({'result': 'success', 'exists': exists})
+
+@app.route('/mamber/join', methods=['POST'])
+def sign_up():
+    username_receive = request.form['username_give']
+    nickname_receive = request.form['nickname_give']
+    password_receive = request.form['password_give']
+    password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+    doc = {
+        "username": username_receive,                               # 아이디
+        "password": password_hash,                                  # 비밀번호
+        "nickname": nickname_receive,                               # 닉네임
+    }
+    db.users.insert_one(doc)
+    return jsonify({'result': 'success'})
 
 @app.route('/main', methods=['POST'])
 def write_review():
@@ -192,4 +222,3 @@ if __name__ == '__main__':
     app.run(debug=True)
 
     app.run('0.0.0.0', port=5000, debug=True)
-
