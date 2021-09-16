@@ -41,6 +41,7 @@ def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     return response
 
+
 # 로그인 페이지
 @app.route('/login')
 def login():
